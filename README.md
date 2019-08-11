@@ -14,7 +14,7 @@ and must steer clear
 2. (Distance detection part): Eleoo HC-SR04 Ultrasonic Module
 3. (Control part) teensy 3.0 
 4. (Sensor part): microphone
-## Demostration
+## Demonstration
 [![Watch the video](https://www.youtube.com/upload_thumbnail?v=odqYxbhW_Ps&t=hqdefault&ts=1565551223037)](https://youtu.be/odqYxbhW_Ps)
 
 ## Reference
