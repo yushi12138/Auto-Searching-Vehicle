@@ -19,11 +19,74 @@ and must steer clear
 2. (Distance detection part): Eleoo HC-SR04 Ultrasonic Module
 3. (Control part) teensy 3.0 
 4. (Sound Sensor part): microphone
+
+## IDE
+Arduino IDE
+
 ## Connection(PIN numbers are on the reference picture)
 - Battery pack: Vin and GND
 - Motor Controller: PIN 5 and PIN 6 (which support PWM)
 - Sonic Sensor: PIN A0 (which is an anlog pin, can directly use anlogread() function defined by arduino)
 - Ultrasonic sensor: (trigPin,echoPin) pairs: (15,16),(0,1),(11,12), in final presentation we use three ultrasonic sensor in total.
+- led : PIN 13 on chip
+- all the ground pins of components should all connect to the GND of teensy duino.
+## Setup
+```c
+
+// LED Pin Number
+const int led = 13;
+
+// Ultrasonic Sensor pin numbers
+const int trigPin = 15;
+const int echoPin = 16;
+const int trigPin1 = 0;
+const int echoPin1 = 1;//left
+const int trigPin2 = 11;
+const int echoPin2 = 12;
+
+void setup()
+{
+  //---------------------------------FFT Section------------------------------
+  sampling_period_us = round(1000000 * (1.0 / samplingFrequency));
+  Serial.begin(115200);
+
+  //---------------------------------PWM Section------------------------------
+  PORTD_PCR4 |= (1U << 10);
+  PORTD_PCR7 |= (1U << 10);
+
+  // 50% duty cycle ~ 1.6v with 8 BIT RESOLUTION
+  // Bit 3 and bit 4 of status control, select system clock
+  FTM0_SC |= _BV(3);
+  FTM0_SC &= ~(_BV(4));
+
+  //DISABLE WRITE PROTECTION
+  FTM0_MODE |= (1U << 2);     // Mode register
+  FTM0_MODE |= _BV(1);        // Enables FTM
+  FTM0_SC |= 0x4;
+
+  // Set MSB and ELSB, bit 5 and bit 3, which sets edge aligned PWM mode
+  FTM0_C4SC |= (1U << 3) | (1U << 5);
+  FTM0_C7SC |= (1U << 3) | (1U << 5);
+  // Requirements for edge aligned up counter pwm is done,
+  // MSnB 1 (Channel mode select B), QUADEN 0 (Quadrature Decoder),
+  // DECAPEN 0 (Dual edge capture), COMBINE 0 (Pair dual channel),
+  // CPWMS 0 (center aligned disabled and set as upcounting mode)
+
+  FTM0_CNTIN = 0;         // Initial value is 0 for PWM counter
+  FTM0_MOD = 29999;       // Counts up to MOD, 20ms per cycle
+
+  //---------------------------------LED Section------------------------------
+  pinMode(led, OUTPUT);
+
+  //---------------------------------Ultasonic Sensor Section-------------------
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
+  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
+  pinMode(trigPin1, OUTPUT); // Sets the trigPin as an Output
+  pinMode(echoPin1, INPUT); // Sets the echoPin as an Input
+  pinMode(trigPin2, OUTPUT); // Sets the trigPin as an Output
+  pinMode(echoPin2, INPUT); // Sets the echoPin as an Input
+}
+```
 
 ## lib
 ### FFT
