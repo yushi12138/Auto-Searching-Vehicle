@@ -87,6 +87,24 @@ void setup()
   pinMode(echoPin2, INPUT); // Sets the echoPin as an Input
 }
 ```
+## Software Implementation
+### FFT
+### PWM
+### Ultrasonic Sensor
+
+## Strategy
+1. spin around(fixed angle per time), microphone collects the data of sound in each direction and do fft to figure out the magnitude of already known buzzer frequencies.
+
+2. keep a table of directions of these frequencies when their magnitudes are the largest. And keep another table of these largest magnitudes with respect.
+
+3. find if the magnitude of target frequecy is larger than the threshold decided by me.
+
+4. if so turn to the direction find the target frequency, 
+   if not turn to direction in which certain frequency has largest magnitude(which means this buzzer is nearest to the vehicle).
+   
+5. (Distance Detection)when approaching the buzzer, the ultrasonic sensor will detect the distance between the vehicle and beacon(a plastic mushroom-shaped contaienr where the buzzer put). 
+   If the buzzer has target frequency, when the magnitude of target frequency is large enough and the distance is samll enough, the vehicle will stop and the led will start to blink.
+   if the buzzer doesn't has the target frequency, when the vehecle can detect the beacon is in the right way the vehicle is moving(based on the ultrasonic sensor in the front of the vehicle) and the distance is small enough, it'll walk around the beacon and set it as visited in the visited table. Next time the vehicle will ignore the magnitude of this frequency and find other unvisited beacon until find the target one. 
 
 ## lib
 ### FFT
